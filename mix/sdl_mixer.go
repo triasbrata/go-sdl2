@@ -27,7 +27,7 @@ package mix
 import "C"
 import "unsafe"
 import "reflect"
-import "github.com/veandco/go-sdl2/sdl"
+import "github.com/ClarkGuan/go-sdl2/sdl"
 
 // Chunk is the internal format for an audio chunk.
 // (https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_85.html)
@@ -87,7 +87,7 @@ const DEFAULT_CHUNKSIZE = 1024
 
 // Music is a data type used for Music data.
 // (https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_86.html)
-type Music C.Mix_Music
+type Music uintptr
 
 // MusicType is a file format encoding of the music.
 // (https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_87.html)
@@ -157,7 +157,7 @@ func QuerySpec() (frequency int, format uint16, channels int, open int, err erro
 
 // LoadWAVRW loads src for use as a sample. This can load WAVE, AIFF, RIFF, OGG, and VOC formats. Note: You must call mix.OpenAudio() before this. It must know the output characteristics so it can convert the sample for playback, it does this conversion at load time. Returns: a pointer to the sample as a mix.Chunk.
 // (https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_20.html)
-func LoadWAVRW(src *sdl.RWops, freesrc bool) (chunk *Chunk, err error) {
+func LoadWAVRW(src sdl.RWops, freesrc bool) (chunk *Chunk, err error) {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_freesrc := cint(freesrc)
 	chunk = (*Chunk)(unsafe.Pointer(C.Mix_LoadWAV_RW(_src, _freesrc)))
@@ -184,35 +184,35 @@ func LoadWAV(file string) (chunk *Chunk, err error) {
 
 // LoadMUS loads music file to use. This can load WAVE, MOD, MIDI, OGG, MP3, FLAC, and any file that you use a command to play with. If you are using an external command to play the music, you must call mix.SetMusicCMD before this, otherwise the internal players will be used. Alternatively, if you have set an external command up and don't want to use it, you must call Mix_SetMusicCMD(nil) to use the built-in players again. Returns: A pointer to a mix.Music.
 // (https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_55.html)
-func LoadMUS(file string) (mus *Music, err error) {
+func LoadMUS(file string) (mus Music, err error) {
 	_file := C.CString(file)
 	defer C.free(unsafe.Pointer(_file))
-	mus = (*Music)(unsafe.Pointer(C.Mix_LoadMUS(_file)))
-	if mus == nil {
+	mus = Music(unsafe.Pointer(C.Mix_LoadMUS(_file)))
+	if mus == 0 {
 		err = sdl.GetError()
 	}
 	return
 }
 
 // LoadMUSRW loads a music file from an sdl.RWop object (Ogg and MikMod specific currently).
-func LoadMUSRW(src *sdl.RWops, freesrc int) (mus *Music, err error) {
+func LoadMUSRW(src sdl.RWops, freesrc int) (mus Music, err error) {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_freesrc := (C.int)(freesrc)
-	mus = (*Music)(unsafe.Pointer(C.Mix_LoadMUS_RW(_src, _freesrc)))
-	if mus == nil {
+	mus = Music(unsafe.Pointer(C.Mix_LoadMUS_RW(_src, _freesrc)))
+	if mus == 0 {
 		err = sdl.GetError()
 	}
 	return
 }
 
 // LoadMUSTypeRW loads a music file from an sdl.RWop object assuming a specific format.
-func LoadMUSTypeRW(src *sdl.RWops, type_ MusicType, freesrc int) (mus *Music, err error) {
+func LoadMUSTypeRW(src sdl.RWops, type_ MusicType, freesrc int) (mus Music, err error) {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_type := (C.Mix_MusicType)(type_)
 	_freesrc := (C.int)(freesrc)
-	mus = (*Music)(unsafe.Pointer(C.Mix_LoadMUSType_RW(_src, _type,
+	mus = Music(unsafe.Pointer(C.Mix_LoadMUSType_RW(_src, _type,
 		_freesrc)))
-	if mus == nil {
+	if mus == 0 {
 		err = sdl.GetError()
 	}
 	return
@@ -250,14 +250,14 @@ func (chunk *Chunk) Free() {
 
 // Free frees the loaded music. If music is playing it will be halted. If music is fading out, then this function will wait (blocking) until the fade out is complete.
 // (https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_56.html)
-func (music *Music) Free() {
+func (music Music) Free() {
 	_music := (*C.Mix_Music)(unsafe.Pointer(music))
 	C.Mix_FreeMusic(_music)
 }
 
 // Type tells you the file format encoding of the music. This may be handy when used with mix.SetMusicPosition(), and other music functions that vary based on the type of music being played. If you want to know the type of music currently being played, pass in nil to music. Returns: The type of music or if music is nil then the currently playing music type, otherwise NONE if no music is playing.
 // (https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_70.html)
-func (music *Music) Type() MusicType {
+func (music Music) Type() MusicType {
 	_music := (*C.Mix_Music)(unsafe.Pointer(music))
 	return (MusicType)(C.Mix_GetMusicType(_music))
 }
@@ -395,7 +395,7 @@ func (chunk *Chunk) Play(channel, loops int) (channel_ int, err error) {
 
 // Play plays the loaded music loop times through from start to finish. The previous music will be halted, or if fading out it waits (blocking) for that to finish.
 // (https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_57.html)
-func (music *Music) Play(loops int) error {
+func (music Music) Play(loops int) error {
 	_music := (*C.Mix_Music)(unsafe.Pointer(music))
 	_loops := (C.int)(loops)
 	if C.Mix_PlayMusic(_music, _loops) == -1 {
@@ -406,7 +406,7 @@ func (music *Music) Play(loops int) error {
 
 // FadeIn fades in over ms milliseconds of time, the loaded music, playing it loop times through from start to finish. The fade in effect only applies to the first loop. Any previous music will be halted, or if it is fading out it will wait (blocking) for the fade to complete. This function is the same as mix.*Music.FadeInPos(loops, ms, 0).
 // (https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_58.html)
-func (music *Music) FadeIn(loops, ms int) error {
+func (music Music) FadeIn(loops, ms int) error {
 	_music := (*C.Mix_Music)(unsafe.Pointer(music))
 	_loops := (C.int)(loops)
 	_ms := (C.int)(ms)
@@ -418,7 +418,7 @@ func (music *Music) FadeIn(loops, ms int) error {
 
 // FadeInPos fades in over ms milliseconds of time, the loaded music, playing it loop times through from start to finish. The fade in effect only applies to the first loop. The first time the music is played, it posistion will be set to posistion, which means different things for different types of music files, see mix.SetMusicPosition() for more info on that. Any previous music will be halted, or if it is fading out it will wait (blocking) for the fade to complete.
 // (https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_59.html)
-func (music *Music) FadeInPos(loops, ms int, position float64) error {
+func (music Music) FadeInPos(loops, ms int, position float64) error {
 	_music := (*C.Mix_Music)(unsafe.Pointer(music))
 	_loops := (C.int)(loops)
 	_ms := (C.int)(ms)
