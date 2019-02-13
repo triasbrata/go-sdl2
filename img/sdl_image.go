@@ -6,7 +6,7 @@ package img
 import "C"
 import "unsafe"
 import "errors"
-import "github.com/veandco/go-sdl2/sdl"
+import "github.com/ClarkGuan/go-sdl2/sdl"
 
 // Flags which may be passed to img.Init() to load support of image formats, can be bitwise OR'd together.
 const (
@@ -47,7 +47,7 @@ func GetError() error {
 
 // LoadTypedRW loads an image from an SDL data source. The 'type' may be one of: "BMP", "GIF", "PNG", etc. If the image format supports a transparent pixel, SDL will set the colorkey for the surface.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_13.html)
-func LoadTypedRW(src *sdl.RWops, freesrc bool, type_ string) (*sdl.Surface, error) {
+func LoadTypedRW(src sdl.RWops, freesrc bool, type_ string) (*sdl.Surface, error) {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_freesrc := (C.int)(sdl.Btoi(freesrc))
 	_type := C.CString(type_)
@@ -73,7 +73,7 @@ func Load(file string) (*sdl.Surface, error) {
 
 // LoadRW loads an image from an SDL data source for use as a surface.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_12.html)
-func LoadRW(src *sdl.RWops, freesrc bool) (*sdl.Surface, error) {
+func LoadRW(src sdl.RWops, freesrc bool) (*sdl.Surface, error) {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_freesrc := (C.int)(sdl.Btoi(freesrc))
 	_surface := C.IMG_Load_RW(_src, _freesrc)
@@ -84,129 +84,129 @@ func LoadRW(src *sdl.RWops, freesrc bool) (*sdl.Surface, error) {
 }
 
 // LoadTexture loads an image directly into a render texture.
-func LoadTexture(renderer *sdl.Renderer, file string) (*sdl.Texture, error) {
+func LoadTexture(renderer sdl.Renderer, file string) (sdl.Texture, error) {
 	_renderer := (*C.SDL_Renderer)(unsafe.Pointer(renderer))
 	_file := C.CString(file)
 	defer C.free(unsafe.Pointer(_file))
 	_surface := C.IMG_LoadTexture(_renderer, _file)
 	if _surface == nil {
-		return nil, GetError()
+		return 0, GetError()
 	}
-	return (*sdl.Texture)(unsafe.Pointer(_surface)), nil
+	return sdl.Texture(unsafe.Pointer(_surface)), nil
 }
 
 // LoadTextureRW loads an image from an SDL data source directly into a render texture.
-func LoadTextureRW(renderer *sdl.Renderer, src *sdl.RWops, freesrc bool) (*sdl.Texture, error) {
+func LoadTextureRW(renderer sdl.Renderer, src sdl.RWops, freesrc bool) (sdl.Texture, error) {
 	_renderer := (*C.SDL_Renderer)(unsafe.Pointer(renderer))
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_freesrc := (C.int)(sdl.Btoi(freesrc))
 	_surface := C.IMG_LoadTexture_RW(_renderer, _src, _freesrc)
 	if _surface == nil {
-		return nil, GetError()
+		return 0, GetError()
 	}
-	return (*sdl.Texture)(unsafe.Pointer(_surface)), nil
+	return sdl.Texture(unsafe.Pointer(_surface)), nil
 }
 
 // IsICO reports whether ICO format is supported and image data is readable as an ICO.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_31.html)
-func IsICO(src *sdl.RWops) bool {
+func IsICO(src sdl.RWops) bool {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	return int(C.IMG_isICO(_src)) > 0
 }
 
 // IsCUR reports whether CUR format is supported and image data is readable as a CUR.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_30.html)
-func IsCUR(src *sdl.RWops) bool {
+func IsCUR(src sdl.RWops) bool {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	return int(C.IMG_isCUR(_src)) > 0
 }
 
 // IsBMP reports whether BMP format is supported and image data is readable as a BMP.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_32.html)
-func IsBMP(src *sdl.RWops) bool {
+func IsBMP(src sdl.RWops) bool {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	return int(C.IMG_isBMP(_src)) > 0
 }
 
 // IsGIF reports whether GIF format is supported and image data is readable as a GIF.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_37.html)
-func IsGIF(src *sdl.RWops) bool {
+func IsGIF(src sdl.RWops) bool {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	return int(C.IMG_isGIF(_src)) > 0
 }
 
 // IsJPG reports whether JPG format is supported and image data is readable as a JPG.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_38.html)
-func IsJPG(src *sdl.RWops) bool {
+func IsJPG(src sdl.RWops) bool {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	return int(C.IMG_isJPG(_src)) > 0
 }
 
 // IsLBM reports whether LBM format is supported and image data is readable as an LBM.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_41.html)
-func IsLBM(src *sdl.RWops) bool {
+func IsLBM(src sdl.RWops) bool {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	return int(C.IMG_isLBM(_src)) > 0
 }
 
 // IsPCX reports whether PCX format is supported and image data is readable as a PCX.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_36.html)
-func IsPCX(src *sdl.RWops) bool {
+func IsPCX(src sdl.RWops) bool {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	return int(C.IMG_isPCX(_src)) > 0
 }
 
 // IsPNG reports whether PNG format is supported and image data is readable as a PNG.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_40.html)
-func IsPNG(src *sdl.RWops) bool {
+func IsPNG(src sdl.RWops) bool {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	return int(C.IMG_isPNG(_src)) > 0
 }
 
 // IsPNM reports whether PNM format is supported and image data is readable as a PNM.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_33.html)
-func IsPNM(src *sdl.RWops) bool {
+func IsPNM(src sdl.RWops) bool {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	return int(C.IMG_isPNM(_src)) > 0
 }
 
 // IsTIF reports whether TIF format is supported and image data is readable as a TIF.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_39.html)
-func IsTIF(src *sdl.RWops) bool {
+func IsTIF(src sdl.RWops) bool {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	return int(C.IMG_isTIF(_src)) > 0
 }
 
 // IsXCF reports whether XCF format is supported and image data is readable as an XCF.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_35.html)
-func IsXCF(src *sdl.RWops) bool {
+func IsXCF(src sdl.RWops) bool {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	return int(C.IMG_isXCF(_src)) > 0
 }
 
 // IsXPM reports whether XPM format is supported and image data is readable as an XPM.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_34.html)
-func IsXPM(src *sdl.RWops) bool {
+func IsXPM(src sdl.RWops) bool {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	return int(C.IMG_isXPM(_src)) > 0
 }
 
 // IsXV reports whether XV format is supported and image data is readable as an XV thumbnail.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_42.html)
-func IsXV(src *sdl.RWops) bool {
+func IsXV(src sdl.RWops) bool {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	return int(C.IMG_isXV(_src)) > 0
 }
 
 // IsWEBP reports whether WEBP format is supported and image data is readable as a WEBP.
-func IsWEBP(src *sdl.RWops) bool {
+func IsWEBP(src sdl.RWops) bool {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	return int(C.IMG_isWEBP(_src)) > 0
 }
 
 // LoadICORW loads an ICO image from an SDL data source for use as a surface.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_15.html)
-func LoadICORW(src *sdl.RWops) (*sdl.Surface, error) {
+func LoadICORW(src sdl.RWops) (*sdl.Surface, error) {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_surface := C.IMG_LoadICO_RW(_src)
 	if _surface == nil {
@@ -217,7 +217,7 @@ func LoadICORW(src *sdl.RWops) (*sdl.Surface, error) {
 
 // LoadCURRW loads a CUR image from an SDL data source for use as a surface.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_14.html)
-func LoadCURRW(src *sdl.RWops) (*sdl.Surface, error) {
+func LoadCURRW(src sdl.RWops) (*sdl.Surface, error) {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_surface := C.IMG_LoadCUR_RW(_src)
 	if _surface == nil {
@@ -228,7 +228,7 @@ func LoadCURRW(src *sdl.RWops) (*sdl.Surface, error) {
 
 // LoadBMPRW loads a BMP image from an SDL data source for use as a surface.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_16.html)
-func LoadBMPRW(src *sdl.RWops) (*sdl.Surface, error) {
+func LoadBMPRW(src sdl.RWops) (*sdl.Surface, error) {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_surface := C.IMG_LoadBMP_RW(_src)
 	if _surface == nil {
@@ -239,7 +239,7 @@ func LoadBMPRW(src *sdl.RWops) (*sdl.Surface, error) {
 
 // LoadGIFRW loads a GIF image from an SDL data source for use as a surface.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_21.html)
-func LoadGIFRW(src *sdl.RWops) (*sdl.Surface, error) {
+func LoadGIFRW(src sdl.RWops) (*sdl.Surface, error) {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_surface := C.IMG_LoadGIF_RW(_src)
 	if _surface == nil {
@@ -250,7 +250,7 @@ func LoadGIFRW(src *sdl.RWops) (*sdl.Surface, error) {
 
 // LoadJPGRW loads a JPG image from an SDL data source for use as a surface.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_22.html)
-func LoadJPGRW(src *sdl.RWops) (*sdl.Surface, error) {
+func LoadJPGRW(src sdl.RWops) (*sdl.Surface, error) {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_surface := C.IMG_LoadJPG_RW(_src)
 	if _surface == nil {
@@ -261,7 +261,7 @@ func LoadJPGRW(src *sdl.RWops) (*sdl.Surface, error) {
 
 // LoadLBMRW loads an LBM image from an SDL data source for use as a surface.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_26.html)
-func LoadLBMRW(src *sdl.RWops) (*sdl.Surface, error) {
+func LoadLBMRW(src sdl.RWops) (*sdl.Surface, error) {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_surface := C.IMG_LoadLBM_RW(_src)
 	if _surface == nil {
@@ -272,7 +272,7 @@ func LoadLBMRW(src *sdl.RWops) (*sdl.Surface, error) {
 
 // LoadPCXRW loads a PCX image from an SDL data source for use as a surface.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_20.html)
-func LoadPCXRW(src *sdl.RWops) (*sdl.Surface, error) {
+func LoadPCXRW(src sdl.RWops) (*sdl.Surface, error) {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_surface := C.IMG_LoadPCX_RW(_src)
 	if _surface == nil {
@@ -283,7 +283,7 @@ func LoadPCXRW(src *sdl.RWops) (*sdl.Surface, error) {
 
 // LoadPNGRW loads a PNG image from an SDL data source for use as a surface.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_24.html)
-func LoadPNGRW(src *sdl.RWops) (*sdl.Surface, error) {
+func LoadPNGRW(src sdl.RWops) (*sdl.Surface, error) {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_surface := C.IMG_LoadPNG_RW(_src)
 	if _surface == nil {
@@ -294,7 +294,7 @@ func LoadPNGRW(src *sdl.RWops) (*sdl.Surface, error) {
 
 // LoadPNMRW loads a PNM image from an SDL data source for use as a surface.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_17.html)
-func LoadPNMRW(src *sdl.RWops) (*sdl.Surface, error) {
+func LoadPNMRW(src sdl.RWops) (*sdl.Surface, error) {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_surface := C.IMG_LoadPNM_RW(_src)
 	if _surface == nil {
@@ -305,7 +305,7 @@ func LoadPNMRW(src *sdl.RWops) (*sdl.Surface, error) {
 
 // LoadTGARW loads a TGA image from an SDL data source for use as a surface.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_25.html)
-func LoadTGARW(src *sdl.RWops) (*sdl.Surface, error) {
+func LoadTGARW(src sdl.RWops) (*sdl.Surface, error) {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_surface := C.IMG_LoadTGA_RW(_src)
 	if _surface == nil {
@@ -316,7 +316,7 @@ func LoadTGARW(src *sdl.RWops) (*sdl.Surface, error) {
 
 // LoadTIFRW loads a TIF image from an SDL data source for use as a surface.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_23.html)
-func LoadTIFRW(src *sdl.RWops) (*sdl.Surface, error) {
+func LoadTIFRW(src sdl.RWops) (*sdl.Surface, error) {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_surface := C.IMG_LoadTIF_RW(_src)
 	if _surface == nil {
@@ -327,7 +327,7 @@ func LoadTIFRW(src *sdl.RWops) (*sdl.Surface, error) {
 
 // LoadXCFRW loads an XCF image from an SDL data source for use as a surface.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_19.html)
-func LoadXCFRW(src *sdl.RWops) (*sdl.Surface, error) {
+func LoadXCFRW(src sdl.RWops) (*sdl.Surface, error) {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_surface := C.IMG_LoadXCF_RW(_src)
 	if _surface == nil {
@@ -338,7 +338,7 @@ func LoadXCFRW(src *sdl.RWops) (*sdl.Surface, error) {
 
 // LoadXPMRW loads an XPM image from an SDL data source for use as a surface.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_18.html)
-func LoadXPMRW(src *sdl.RWops) (*sdl.Surface, error) {
+func LoadXPMRW(src sdl.RWops) (*sdl.Surface, error) {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_surface := C.IMG_LoadXPM_RW(_src)
 	if _surface == nil {
@@ -349,7 +349,7 @@ func LoadXPMRW(src *sdl.RWops) (*sdl.Surface, error) {
 
 // LoadXVRW loads an XV thumbnail image from an SDL data source for use as a surface.
 // (http://www.libsdl.org/projects/SDL_image/docs/SDL_image_27.html)
-func LoadXVRW(src *sdl.RWops) (*sdl.Surface, error) {
+func LoadXVRW(src sdl.RWops) (*sdl.Surface, error) {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_surface := C.IMG_LoadXV_RW(_src)
 	if _surface == nil {
@@ -359,7 +359,7 @@ func LoadXVRW(src *sdl.RWops) (*sdl.Surface, error) {
 }
 
 // LoadWEBPRW loads a WEBP image from an SDL data source for use as a surface.
-func LoadWEBPRW(src *sdl.RWops) (*sdl.Surface, error) {
+func LoadWEBPRW(src sdl.RWops) (*sdl.Surface, error) {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_surface := C.IMG_LoadWEBP_RW(_src)
 	if _surface == nil {
@@ -393,7 +393,7 @@ func SavePNG(surface *sdl.Surface, file string) error {
 }
 
 // SavePNGRW saves a surface to an SDL data source.
-func SavePNGRW(surface *sdl.Surface, dst *sdl.RWops, freedst int) error {
+func SavePNGRW(surface *sdl.Surface, dst sdl.RWops, freedst int) error {
 	_surface := (*C.SDL_Surface)(unsafe.Pointer(surface))
 	_dst := (*C.SDL_RWops)(unsafe.Pointer(dst))
 	_freedst := (C.int)(freedst)
