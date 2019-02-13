@@ -176,7 +176,7 @@ const (
 	SENSOR_GYRO                    // Gyroscope
 )
 
-type Sensor C.SDL_Sensor
+type Sensor uintptr
 type SensorID int32
 type SensorType int
 
@@ -236,15 +236,15 @@ func SensorGetDeviceInstanceID(deviceIndex int) (id SensorID) {
 //
 // Returns a sensor identifier, or nil if an error occurred.
 // (https://wiki.libsdl.org/SDL_SensorOpen)
-func SensorOpen(deviceIndex int) (sensor *Sensor) {
-	sensor = (*Sensor)(unsafe.Pointer(C.SDL_SensorOpen(C.int(deviceIndex))))
+func SensorOpen(deviceIndex int) (sensor Sensor) {
+	sensor = Sensor(unsafe.Pointer(C.SDL_SensorOpen(C.int(deviceIndex))))
 	return
 }
 
 // SensorFromInstanceID returns the Sensor associated with an instance id.
 // (https://wiki.libsdl.org/SDL_SensorFromInstanceID)
-func SensorFromInstanceID(id SensorID) (sensor *Sensor) {
-	sensor = (*Sensor)(unsafe.Pointer(C.SDL_SensorFromInstanceID(C.SDL_SensorID(id))))
+func SensorFromInstanceID(id SensorID) (sensor Sensor) {
+	sensor = Sensor(unsafe.Pointer(C.SDL_SensorFromInstanceID(C.SDL_SensorID(id))))
 	return
 }
 
@@ -252,8 +252,8 @@ func SensorFromInstanceID(id SensorID) (sensor *Sensor) {
 //
 // Returns the sensor name, or empty string if the sensor is nil.
 // (https://wiki.libsdl.org/SDL_SensorGetName)
-func (sensor *Sensor) GetName() (name string) {
-	name = C.GoString(C.SDL_SensorGetName((*C.SDL_Sensor)(sensor)))
+func (sensor Sensor) GetName() (name string) {
+	name = C.GoString(C.SDL_SensorGetName((*C.SDL_Sensor)(unsafe.Pointer(sensor))))
 	return
 }
 
@@ -263,8 +263,8 @@ func (sensor *Sensor) GetName() (name string) {
 //
 // Returns the sensor type, or SENSOR_INVALID if the sensor is nil.
 // (https://wiki.libsdl.org/SDL_SensorGetType)
-func (sensor *Sensor) GetType() (typ SensorType) {
-	typ = SensorType(C.SDL_SensorGetType((*C.SDL_Sensor)(sensor)))
+func (sensor Sensor) GetType() (typ SensorType) {
+	typ = SensorType(C.SDL_SensorGetType((*C.SDL_Sensor)(unsafe.Pointer(sensor))))
 	return
 }
 
@@ -274,8 +274,8 @@ func (sensor *Sensor) GetType() (typ SensorType) {
 //
 // Returns the sensor platform dependent type, or -1 if the sensor is nil.
 // (https://wiki.libsdl.org/SDL_SensorGetNonPortableType)
-func (sensor *Sensor) GetNonPortableType() (typ int) {
-	typ = int(C.SDL_SensorGetNonPortableType((*C.SDL_Sensor)(sensor)))
+func (sensor Sensor) GetNonPortableType() (typ int) {
+	typ = int(C.SDL_SensorGetNonPortableType((*C.SDL_Sensor)(unsafe.Pointer(sensor))))
 	return
 }
 
@@ -285,8 +285,8 @@ func (sensor *Sensor) GetNonPortableType() (typ int) {
 //
 // Returns the sensor instance ID, or -1 if the sensor is nil.
 // (https://wiki.libsdl.org/SDL_SensorGetInstanceID)
-func (sensor *Sensor) GetInstanceID() (id SensorID) {
-	id = SensorID(C.SDL_SensorGetInstanceID((*C.SDL_Sensor)(sensor)))
+func (sensor Sensor) GetInstanceID() (id SensorID) {
+	id = SensorID(C.SDL_SensorGetInstanceID((*C.SDL_Sensor)(unsafe.Pointer(sensor))))
 	return
 }
 
@@ -294,17 +294,17 @@ func (sensor *Sensor) GetInstanceID() (id SensorID) {
 //
 // The number of values and interpretation of the data is sensor dependent.
 // (https://wiki.libsdl.org/SDL_SensorGetData)
-func (sensor *Sensor) GetData(data []float32) (err error) {
+func (sensor Sensor) GetData(data []float32) (err error) {
 	_data := (*C.float)(unsafe.Pointer(&data[0]))
 	_numValues := C.int(len(data))
-	err = errorFromInt(int(C.SDL_SensorGetData((*C.SDL_Sensor)(sensor), _data, _numValues)))
+	err = errorFromInt(int(C.SDL_SensorGetData((*C.SDL_Sensor)(unsafe.Pointer(sensor)), _data, _numValues)))
 	return
 }
 
 // Close closes a sensor previously opened with SensorOpen()
 // (https://wiki.libsdl.org/SDL_SensorClose)
-func (sensor *Sensor) Close() (typ int) {
-	typ = int(C.SDL_SensorGetNonPortableType((*C.SDL_Sensor)(sensor)))
+func (sensor Sensor) Close() (typ int) {
+	typ = int(C.SDL_SensorGetNonPortableType((*C.SDL_Sensor)(unsafe.Pointer(sensor))))
 	return
 }
 
