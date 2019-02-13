@@ -4,7 +4,7 @@ package gfx
 //#include <stdlib.h>
 //#include "sdl_gfx_wrapper.h"
 import "C"
-import "github.com/veandco/go-sdl2/sdl"
+import "github.com/ClarkGuan/go-sdl2/sdl"
 import "unsafe"
 
 // FPS definitions.
@@ -84,7 +84,7 @@ func FramerateDelay(manager *FPSmanager) uint32 {
 
 // PixelColor pixel draws with blending enabled if a<255.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#ae6f8690e5c5a85d3263c8e16727b34ef)
-func PixelColor(renderer *sdl.Renderer, x, y int32, color sdl.Color) bool {
+func PixelColor(renderer sdl.Renderer, x, y int32, color sdl.Color) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_color := C.Uint32(gfxColor(color))
@@ -93,7 +93,7 @@ func PixelColor(renderer *sdl.Renderer, x, y int32, color sdl.Color) bool {
 
 // PixelRGBA pixel draws with blending enabled if a<255.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a7b6f83bdef72f6b356664a93841381c0)
-func PixelRGBA(renderer *sdl.Renderer, x, y int32, r, g, b, a uint8) bool {
+func PixelRGBA(renderer sdl.Renderer, x, y int32, r, g, b, a uint8) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_r := C.Uint8(r)
@@ -105,7 +105,7 @@ func PixelRGBA(renderer *sdl.Renderer, x, y int32, r, g, b, a uint8) bool {
 
 // HlineColor draws horizontal line with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#ac211a904dce45093315e15b10c80d8ac)
-func HlineColor(renderer *sdl.Renderer, x1, x2, y int32, color sdl.Color) bool {
+func HlineColor(renderer sdl.Renderer, x1, x2, y int32, color sdl.Color) bool {
 	_x1 := C.Sint16(x1)
 	_x2 := C.Sint16(x2)
 	_y := C.Sint16(y)
@@ -115,7 +115,7 @@ func HlineColor(renderer *sdl.Renderer, x1, x2, y int32, color sdl.Color) bool {
 
 // HlineRGBA draws horizontal line with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a6608a0d1d4c7e16fa1afcbd3eb5c3850)
-func HlineRGBA(renderer *sdl.Renderer, x1, x2, y int32, r, g, b, a uint8) bool {
+func HlineRGBA(renderer sdl.Renderer, x1, x2, y int32, r, g, b, a uint8) bool {
 	_x1 := C.Sint16(x1)
 	_x2 := C.Sint16(x2)
 	_y := C.Sint16(y)
@@ -128,7 +128,7 @@ func HlineRGBA(renderer *sdl.Renderer, x1, x2, y int32, r, g, b, a uint8) bool {
 
 // VlineColor draws vertical line with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a9b45060155a19fee24f998d7790f1d67)
-func VlineColor(renderer *sdl.Renderer, x, y1, y2 int32, color sdl.Color) bool {
+func VlineColor(renderer sdl.Renderer, x, y1, y2 int32, color sdl.Color) bool {
 	_x := C.Sint16(x)
 	_y1 := C.Sint16(y1)
 	_y2 := C.Sint16(y2)
@@ -138,7 +138,7 @@ func VlineColor(renderer *sdl.Renderer, x, y1, y2 int32, color sdl.Color) bool {
 
 // VlineRGBA draws vertical line with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a8b79ac1e779755aee92b04f3a6cfc5d7)
-func VlineRGBA(renderer *sdl.Renderer, x, y1, y2 int32, r, g, b, a uint8) bool {
+func VlineRGBA(renderer sdl.Renderer, x, y1, y2 int32, r, g, b, a uint8) bool {
 	_x := C.Sint16(x)
 	_y1 := C.Sint16(y1)
 	_y2 := C.Sint16(y2)
@@ -151,7 +151,7 @@ func VlineRGBA(renderer *sdl.Renderer, x, y1, y2 int32, r, g, b, a uint8) bool {
 
 // RectangleColor draws rectangle with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a6ab25c393f6e5f8d68ea3365f6ea98d2)
-func RectangleColor(renderer *sdl.Renderer, x1, y1, x2, y2 int32, color sdl.Color) bool {
+func RectangleColor(renderer sdl.Renderer, x1, y1, x2, y2 int32, color sdl.Color) bool {
 	_x1 := C.Sint16(x1)
 	_y1 := C.Sint16(y1)
 	_x2 := C.Sint16(x2)
@@ -162,7 +162,7 @@ func RectangleColor(renderer *sdl.Renderer, x1, y1, x2, y2 int32, color sdl.Colo
 
 // RectangleRGBA draws rectangle with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a40991c6eeb936d35d0a8e8aa95268f72)
-func RectangleRGBA(renderer *sdl.Renderer, x1, y1, x2, y2 int32, r, g, b, a uint8) bool {
+func RectangleRGBA(renderer sdl.Renderer, x1, y1, x2, y2 int32, r, g, b, a uint8) bool {
 	_x1 := C.Sint16(x1)
 	_y1 := C.Sint16(y1)
 	_x2 := C.Sint16(x2)
@@ -176,7 +176,7 @@ func RectangleRGBA(renderer *sdl.Renderer, x1, y1, x2, y2 int32, r, g, b, a uint
 
 // RoundedRectangleColor draws rounded-corner rectangle with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a830dd9dcfa39f4718aa2c269060326d0)
-func RoundedRectangleColor(renderer *sdl.Renderer, x1, y1, x2, y2, rad int32, color sdl.Color) bool {
+func RoundedRectangleColor(renderer sdl.Renderer, x1, y1, x2, y2, rad int32, color sdl.Color) bool {
 	_x1 := C.Sint16(x1)
 	_y1 := C.Sint16(y1)
 	_x2 := C.Sint16(x2)
@@ -188,7 +188,7 @@ func RoundedRectangleColor(renderer *sdl.Renderer, x1, y1, x2, y2, rad int32, co
 
 // RoundedRectangleRGBA draws rounded-corner rectangle with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a300272b3b799f09ca6cd5c541b19f07a)
-func RoundedRectangleRGBA(renderer *sdl.Renderer, x1, y1, x2, y2, rad int32, r, g, b, a uint8) bool {
+func RoundedRectangleRGBA(renderer sdl.Renderer, x1, y1, x2, y2, rad int32, r, g, b, a uint8) bool {
 	_x1 := C.Sint16(x1)
 	_y1 := C.Sint16(y1)
 	_x2 := C.Sint16(x2)
@@ -203,7 +203,7 @@ func RoundedRectangleRGBA(renderer *sdl.Renderer, x1, y1, x2, y2, rad int32, r, 
 
 // BoxColor draws box (filled rectangle) with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a6bb30dfc32d0aee20271a0356a2e2fd0)
-func BoxColor(renderer *sdl.Renderer, x1, y1, x2, y2 int32, color sdl.Color) bool {
+func BoxColor(renderer sdl.Renderer, x1, y1, x2, y2 int32, color sdl.Color) bool {
 	_x1 := C.Sint16(x1)
 	_y1 := C.Sint16(y1)
 	_x2 := C.Sint16(x2)
@@ -214,7 +214,7 @@ func BoxColor(renderer *sdl.Renderer, x1, y1, x2, y2 int32, color sdl.Color) boo
 
 // BoxRGBA draws box (filled rectangle) with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a1864b3062793a7f7dd81aaf8c8abd6b0)
-func BoxRGBA(renderer *sdl.Renderer, x1, y1, x2, y2 int32, r, g, b, a uint8) bool {
+func BoxRGBA(renderer sdl.Renderer, x1, y1, x2, y2 int32, r, g, b, a uint8) bool {
 	_x1 := C.Sint16(x1)
 	_y1 := C.Sint16(y1)
 	_x2 := C.Sint16(x2)
@@ -228,7 +228,7 @@ func BoxRGBA(renderer *sdl.Renderer, x1, y1, x2, y2 int32, r, g, b, a uint8) boo
 
 // RoundedBoxColor draws rounded-corner box (filled rectangle) with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a718c4f31d1e145106959c2a77d5fee9d)
-func RoundedBoxColor(renderer *sdl.Renderer, x1, y1, x2, y2, rad int32, color sdl.Color) bool {
+func RoundedBoxColor(renderer sdl.Renderer, x1, y1, x2, y2, rad int32, color sdl.Color) bool {
 	_x1 := C.Sint16(x1)
 	_y1 := C.Sint16(y1)
 	_x2 := C.Sint16(x2)
@@ -240,7 +240,7 @@ func RoundedBoxColor(renderer *sdl.Renderer, x1, y1, x2, y2, rad int32, color sd
 
 // RoundedBoxRGBA draws rounded-corner box (filled rectangle) with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#aad706348fec18631d7bc48a2d91f5b4d)
-func RoundedBoxRGBA(renderer *sdl.Renderer, x1, y1, x2, y2, rad int32, r, g, b, a uint8) bool {
+func RoundedBoxRGBA(renderer sdl.Renderer, x1, y1, x2, y2, rad int32, r, g, b, a uint8) bool {
 	_x1 := C.Sint16(x1)
 	_y1 := C.Sint16(y1)
 	_x2 := C.Sint16(x2)
@@ -255,7 +255,7 @@ func RoundedBoxRGBA(renderer *sdl.Renderer, x1, y1, x2, y2, rad int32, r, g, b, 
 
 // LineColor draws line with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#ad44c550fab3cb736eb049713ede94052)
-func LineColor(renderer *sdl.Renderer, x1, y1, x2, y2 int32, color sdl.Color) bool {
+func LineColor(renderer sdl.Renderer, x1, y1, x2, y2 int32, color sdl.Color) bool {
 	_x1 := C.Sint16(x1)
 	_y1 := C.Sint16(y1)
 	_x2 := C.Sint16(x2)
@@ -266,7 +266,7 @@ func LineColor(renderer *sdl.Renderer, x1, y1, x2, y2 int32, color sdl.Color) bo
 
 // LineRGBA draws line with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a760139e11a9ae5defeb755ca0c794f5f)
-func LineRGBA(renderer *sdl.Renderer, x1, y1, x2, y2 int32, r, g, b, a uint8) bool {
+func LineRGBA(renderer sdl.Renderer, x1, y1, x2, y2 int32, r, g, b, a uint8) bool {
 	_x1 := C.Sint16(x1)
 	_y1 := C.Sint16(y1)
 	_x2 := C.Sint16(x2)
@@ -280,7 +280,7 @@ func LineRGBA(renderer *sdl.Renderer, x1, y1, x2, y2 int32, r, g, b, a uint8) bo
 
 // AALineColor draws anti-aliased line with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a25c56f2def855db01dcf7ff7f7356182)
-func AALineColor(renderer *sdl.Renderer, x1, y1, x2, y2 int32, color sdl.Color) bool {
+func AALineColor(renderer sdl.Renderer, x1, y1, x2, y2 int32, color sdl.Color) bool {
 	_x1 := C.Sint16(x1)
 	_y1 := C.Sint16(y1)
 	_x2 := C.Sint16(x2)
@@ -291,7 +291,7 @@ func AALineColor(renderer *sdl.Renderer, x1, y1, x2, y2 int32, color sdl.Color) 
 
 // AALineRGBA draws anti-aliased line with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a25c56f2def855db01dcf7ff7f7356182)
-func AALineRGBA(renderer *sdl.Renderer, x1, y1, x2, y2 int32, r, g, b, a uint8) bool {
+func AALineRGBA(renderer sdl.Renderer, x1, y1, x2, y2 int32, r, g, b, a uint8) bool {
 	_x1 := C.Sint16(x1)
 	_y1 := C.Sint16(y1)
 	_x2 := C.Sint16(x2)
@@ -305,7 +305,7 @@ func AALineRGBA(renderer *sdl.Renderer, x1, y1, x2, y2 int32, r, g, b, a uint8) 
 
 // ThickLineColor draws a thick line with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a1494109358b4e4b7ec300d83e3f90300)
-func ThickLineColor(renderer *sdl.Renderer, x1, y1, x2, y2, width int32, color sdl.Color) bool {
+func ThickLineColor(renderer sdl.Renderer, x1, y1, x2, y2, width int32, color sdl.Color) bool {
 	_x1 := C.Sint16(x1)
 	_y1 := C.Sint16(y1)
 	_x2 := C.Sint16(x2)
@@ -317,7 +317,7 @@ func ThickLineColor(renderer *sdl.Renderer, x1, y1, x2, y2, width int32, color s
 
 // ThickLineRGBA draws a thick line with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a8b24d64b51e23592c93abc2aa50c818e)
-func ThickLineRGBA(renderer *sdl.Renderer, x1, y1, x2, y2, width int32, r, g, b, a uint8) bool {
+func ThickLineRGBA(renderer sdl.Renderer, x1, y1, x2, y2, width int32, r, g, b, a uint8) bool {
 	_x1 := C.Sint16(x1)
 	_y1 := C.Sint16(y1)
 	_x2 := C.Sint16(x2)
@@ -332,7 +332,7 @@ func ThickLineRGBA(renderer *sdl.Renderer, x1, y1, x2, y2, width int32, r, g, b,
 
 // CircleColor draws circle with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#aa99bd361cc947b448142720f2ca3320e)
-func CircleColor(renderer *sdl.Renderer, x, y, rad int32, color sdl.Color) bool {
+func CircleColor(renderer sdl.Renderer, x, y, rad int32, color sdl.Color) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_rad := C.Sint16(rad)
@@ -342,7 +342,7 @@ func CircleColor(renderer *sdl.Renderer, x, y, rad int32, color sdl.Color) bool 
 
 // CircleRGBA draws circle with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a7fe51d4c9426c8795e58c7ddd313b0a4)
-func CircleRGBA(renderer *sdl.Renderer, x, y, rad int32, r, g, b, a uint8) bool {
+func CircleRGBA(renderer sdl.Renderer, x, y, rad int32, r, g, b, a uint8) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_rad := C.Sint16(rad)
@@ -355,7 +355,7 @@ func CircleRGBA(renderer *sdl.Renderer, x, y, rad int32, r, g, b, a uint8) bool 
 
 // ArcColor draws arc with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a461b8ac31e00306aee5f8a4c242671d2)
-func ArcColor(renderer *sdl.Renderer, x, y, rad, start, end int32, color sdl.Color) bool {
+func ArcColor(renderer sdl.Renderer, x, y, rad, start, end int32, color sdl.Color) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_rad := C.Sint16(rad)
@@ -367,7 +367,7 @@ func ArcColor(renderer *sdl.Renderer, x, y, rad, start, end int32, color sdl.Col
 
 // ArcRGBA draws arc with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a2aff993d0d8d64564e16145f401d3cf1)
-func ArcRGBA(renderer *sdl.Renderer, x, y, rad, start, end int32, r, g, b, a uint8) bool {
+func ArcRGBA(renderer sdl.Renderer, x, y, rad, start, end int32, r, g, b, a uint8) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_rad := C.Sint16(rad)
@@ -382,7 +382,7 @@ func ArcRGBA(renderer *sdl.Renderer, x, y, rad, start, end int32, r, g, b, a uin
 
 // AACircleColor draws anti-aliased circle with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#aad64361b01181e6aff940add96d23c61)
-func AACircleColor(renderer *sdl.Renderer, x, y, rad int32, color sdl.Color) bool {
+func AACircleColor(renderer sdl.Renderer, x, y, rad int32, color sdl.Color) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_rad := C.Sint16(rad)
@@ -392,7 +392,7 @@ func AACircleColor(renderer *sdl.Renderer, x, y, rad int32, color sdl.Color) boo
 
 // AACircleRGBA draws anti-aliased circle with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a332780885aa2cfdc2de34dcff8d67e8b)
-func AACircleRGBA(renderer *sdl.Renderer, x, y, rad int32, r, g, b, a uint8) bool {
+func AACircleRGBA(renderer sdl.Renderer, x, y, rad int32, r, g, b, a uint8) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_rad := C.Sint16(rad)
@@ -405,7 +405,7 @@ func AACircleRGBA(renderer *sdl.Renderer, x, y, rad int32, r, g, b, a uint8) boo
 
 // FilledCircleColor draws filled circle with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a39147d1282ec814a1b9e31243aad0359)
-func FilledCircleColor(renderer *sdl.Renderer, x, y, rad int32, color sdl.Color) bool {
+func FilledCircleColor(renderer sdl.Renderer, x, y, rad int32, color sdl.Color) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_rad := C.Sint16(rad)
@@ -415,7 +415,7 @@ func FilledCircleColor(renderer *sdl.Renderer, x, y, rad int32, color sdl.Color)
 
 // FilledCircleRGBA draws filled circle with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a562ba6b18fb70547cd50cb3bb0f70272)
-func FilledCircleRGBA(renderer *sdl.Renderer, x, y, rad int32, r, g, b, a uint8) bool {
+func FilledCircleRGBA(renderer sdl.Renderer, x, y, rad int32, r, g, b, a uint8) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_rad := C.Sint16(rad)
@@ -428,7 +428,7 @@ func FilledCircleRGBA(renderer *sdl.Renderer, x, y, rad int32, r, g, b, a uint8)
 
 // EllipseColor draws ellipse with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a476cff7702f4be9090871e35859782f0)
-func EllipseColor(renderer *sdl.Renderer, x, y, rx, ry int32, color sdl.Color) bool {
+func EllipseColor(renderer sdl.Renderer, x, y, rx, ry int32, color sdl.Color) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_rx := C.Sint16(rx)
@@ -439,7 +439,7 @@ func EllipseColor(renderer *sdl.Renderer, x, y, rx, ry int32, color sdl.Color) b
 
 // EllipseRGBA draws ellipse with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a18c8a26c9009482eec40f9f4a6945fd1)
-func EllipseRGBA(renderer *sdl.Renderer, x, y, rx, ry int32, r, g, b, a uint8) bool {
+func EllipseRGBA(renderer sdl.Renderer, x, y, rx, ry int32, r, g, b, a uint8) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_rx := C.Sint16(rx)
@@ -453,7 +453,7 @@ func EllipseRGBA(renderer *sdl.Renderer, x, y, rx, ry int32, r, g, b, a uint8) b
 
 // AAEllipseColor draws anti-aliased ellipse with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a1c7d20dcba8e0d7ce483f4c854c438be)
-func AAEllipseColor(renderer *sdl.Renderer, x, y, rx, ry int32, color sdl.Color) bool {
+func AAEllipseColor(renderer sdl.Renderer, x, y, rx, ry int32, color sdl.Color) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_rx := C.Sint16(rx)
@@ -464,7 +464,7 @@ func AAEllipseColor(renderer *sdl.Renderer, x, y, rx, ry int32, color sdl.Color)
 
 // AAEllipseRGBA draws anti-aliased ellipse with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#ab9f0f00d7fb2f04aa9ba1630e31a27bf)
-func AAEllipseRGBA(renderer *sdl.Renderer, x, y, rx, ry int32, r, g, b, a uint8) bool {
+func AAEllipseRGBA(renderer sdl.Renderer, x, y, rx, ry int32, r, g, b, a uint8) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_rx := C.Sint16(rx)
@@ -478,7 +478,7 @@ func AAEllipseRGBA(renderer *sdl.Renderer, x, y, rx, ry int32, r, g, b, a uint8)
 
 // FilledEllipseColor draws filled ellipse with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a8fed50800f2f1bdfaa048698f5052f25)
-func FilledEllipseColor(renderer *sdl.Renderer, x, y, rx, ry int32, color sdl.Color) bool {
+func FilledEllipseColor(renderer sdl.Renderer, x, y, rx, ry int32, color sdl.Color) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_rx := C.Sint16(rx)
@@ -489,7 +489,7 @@ func FilledEllipseColor(renderer *sdl.Renderer, x, y, rx, ry int32, color sdl.Co
 
 // FilledEllipseRGBA draws filled ellipse with blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a33595ad996dd0dcccde3abbcef540eec)
-func FilledEllipseRGBA(renderer *sdl.Renderer, x, y, rx, ry int32, r, g, b, a uint8) bool {
+func FilledEllipseRGBA(renderer sdl.Renderer, x, y, rx, ry int32, r, g, b, a uint8) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_rx := C.Sint16(rx)
@@ -503,7 +503,7 @@ func FilledEllipseRGBA(renderer *sdl.Renderer, x, y, rx, ry int32, r, g, b, a ui
 
 // PieColor draws pie (outline) with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a3c2bc64deabda74933f31daba6bed7be)
-func PieColor(renderer *sdl.Renderer, x, y, rad, start, end int32, color sdl.Color) bool {
+func PieColor(renderer sdl.Renderer, x, y, rad, start, end int32, color sdl.Color) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_rad := C.Sint16(rad)
@@ -515,7 +515,7 @@ func PieColor(renderer *sdl.Renderer, x, y, rad, start, end int32, color sdl.Col
 
 // PieRGBA draws pie (outline) with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a8442f2c2bedbe27c96d8d44319981992)
-func PieRGBA(renderer *sdl.Renderer, x, y, rad, start, end int32, r, g, b, a uint8) bool {
+func PieRGBA(renderer sdl.Renderer, x, y, rad, start, end int32, r, g, b, a uint8) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_rad := C.Sint16(rad)
@@ -530,7 +530,7 @@ func PieRGBA(renderer *sdl.Renderer, x, y, rad, start, end int32, r, g, b, a uin
 
 // FilledPieColor draws filled pie with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a2c30ee985b2513dc58d9b19d4e71562b)
-func FilledPieColor(renderer *sdl.Renderer, x, y, rad, start, end int32, color sdl.Color) bool {
+func FilledPieColor(renderer sdl.Renderer, x, y, rad, start, end int32, color sdl.Color) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_rad := C.Sint16(rad)
@@ -542,7 +542,7 @@ func FilledPieColor(renderer *sdl.Renderer, x, y, rad, start, end int32, color s
 
 // FilledPieRGBA draws filled pie with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a4ffdfd2834f3ef0fd0ee622b5f1d16b8)
-func FilledPieRGBA(renderer *sdl.Renderer, x, y, rad, start, end int32, r, g, b, a uint8) bool {
+func FilledPieRGBA(renderer sdl.Renderer, x, y, rad, start, end int32, r, g, b, a uint8) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_rad := C.Sint16(rad)
@@ -557,7 +557,7 @@ func FilledPieRGBA(renderer *sdl.Renderer, x, y, rad, start, end int32, r, g, b,
 
 // TrigonColor draws trigon (triangle outline) with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a7465d08ef930ebb5442c7dd246fed4b5)
-func TrigonColor(renderer *sdl.Renderer, x1, y1, x2, y2, x3, y3 int32, color sdl.Color) bool {
+func TrigonColor(renderer sdl.Renderer, x1, y1, x2, y2, x3, y3 int32, color sdl.Color) bool {
 	_x1 := C.Sint16(x1)
 	_y1 := C.Sint16(y1)
 	_x2 := C.Sint16(x2)
@@ -570,7 +570,7 @@ func TrigonColor(renderer *sdl.Renderer, x1, y1, x2, y2, x3, y3 int32, color sdl
 
 // TrigonRGBA draws trigon (triangle outline) with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a45d6a7edcd8b25e1a60e39b7f60bda3f)
-func TrigonRGBA(renderer *sdl.Renderer, x1, y1, x2, y2, x3, y3 int32, r, g, b, a uint8) bool {
+func TrigonRGBA(renderer sdl.Renderer, x1, y1, x2, y2, x3, y3 int32, r, g, b, a uint8) bool {
 	_x1 := C.Sint16(x1)
 	_y1 := C.Sint16(y1)
 	_x2 := C.Sint16(x2)
@@ -586,7 +586,7 @@ func TrigonRGBA(renderer *sdl.Renderer, x1, y1, x2, y2, x3, y3 int32, r, g, b, a
 
 // FilledTrigonColor draws filled trigon (triangle) with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a78d4ed2372527f3b78f5893928b0f519)
-func FilledTrigonColor(renderer *sdl.Renderer, x1, y1, x2, y2, x3, y3 int32, color sdl.Color) bool {
+func FilledTrigonColor(renderer sdl.Renderer, x1, y1, x2, y2, x3, y3 int32, color sdl.Color) bool {
 	_x1 := C.Sint16(x1)
 	_y1 := C.Sint16(y1)
 	_x2 := C.Sint16(x2)
@@ -599,7 +599,7 @@ func FilledTrigonColor(renderer *sdl.Renderer, x1, y1, x2, y2, x3, y3 int32, col
 
 // FilledTrigonRGBA draws filled trigon (triangle) with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a8f318d776ff1e3c6790405e0e59e5356)
-func FilledTrigonRGBA(renderer *sdl.Renderer, x1, y1, x2, y2, x3, y3 int32, r, g, b, a uint8) bool {
+func FilledTrigonRGBA(renderer sdl.Renderer, x1, y1, x2, y2, x3, y3 int32, r, g, b, a uint8) bool {
 	_x1 := C.Sint16(x1)
 	_y1 := C.Sint16(y1)
 	_x2 := C.Sint16(x2)
@@ -615,7 +615,7 @@ func FilledTrigonRGBA(renderer *sdl.Renderer, x1, y1, x2, y2, x3, y3 int32, r, g
 
 // PolygonColor draws polygon with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a2d692dc25f3b579b386dff8dcd9cbc00)
-func PolygonColor(renderer *sdl.Renderer, vx, vy []int16, color sdl.Color) bool {
+func PolygonColor(renderer sdl.Renderer, vx, vy []int16, color sdl.Color) bool {
 	_vx := (*C.Sint16)(unsafe.Pointer(&vx[0]))
 	_vy := (*C.Sint16)(unsafe.Pointer(&vy[0]))
 	_len := C.int(min(len(vx), len(vy)))
@@ -625,7 +625,7 @@ func PolygonColor(renderer *sdl.Renderer, vx, vy []int16, color sdl.Color) bool 
 
 // PolygonRGBA draws polygon with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#ae55541ec58990420dc6dc6b9d61f33d6)
-func PolygonRGBA(renderer *sdl.Renderer, vx, vy []int16, r, g, b, a uint8) bool {
+func PolygonRGBA(renderer sdl.Renderer, vx, vy []int16, r, g, b, a uint8) bool {
 	_vx := (*C.Sint16)(unsafe.Pointer(&vx[0]))
 	_vy := (*C.Sint16)(unsafe.Pointer(&vy[0]))
 	_len := C.int(min(len(vx), len(vy)))
@@ -638,7 +638,7 @@ func PolygonRGBA(renderer *sdl.Renderer, vx, vy []int16, r, g, b, a uint8) bool 
 
 // AAPolygonColor draws anti-aliased polygon with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a09950a50e8806e88bb20c543c58cc6a8)
-func AAPolygonColor(renderer *sdl.Renderer, vx, vy []int16, color sdl.Color) bool {
+func AAPolygonColor(renderer sdl.Renderer, vx, vy []int16, color sdl.Color) bool {
 	_vx := (*C.Sint16)(unsafe.Pointer(&vx[0]))
 	_vy := (*C.Sint16)(unsafe.Pointer(&vy[0]))
 	_len := C.int(min(len(vx), len(vy)))
@@ -648,7 +648,7 @@ func AAPolygonColor(renderer *sdl.Renderer, vx, vy []int16, color sdl.Color) boo
 
 // AAPolygonRGBA draws anti-aliased polygon with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a7d08522e52d8290c5c498ce435fa51f0)
-func AAPolygonRGBA(renderer *sdl.Renderer, vx, vy []int16, r, g, b, a uint8) bool {
+func AAPolygonRGBA(renderer sdl.Renderer, vx, vy []int16, r, g, b, a uint8) bool {
 	_vx := (*C.Sint16)(unsafe.Pointer(&vx[0]))
 	_vy := (*C.Sint16)(unsafe.Pointer(&vy[0]))
 	_len := C.int(min(len(vx), len(vy)))
@@ -661,7 +661,7 @@ func AAPolygonRGBA(renderer *sdl.Renderer, vx, vy []int16, r, g, b, a uint8) boo
 
 // FilledPolygonColor draws filled polygon with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#af22692175cb73329410cbcc7d7491c4d)
-func FilledPolygonColor(renderer *sdl.Renderer, vx, vy []int16, color sdl.Color) bool {
+func FilledPolygonColor(renderer sdl.Renderer, vx, vy []int16, color sdl.Color) bool {
 	_vx := (*C.Sint16)(unsafe.Pointer(&vx[0]))
 	_vy := (*C.Sint16)(unsafe.Pointer(&vy[0]))
 	_len := C.int(min(len(vx), len(vy)))
@@ -671,7 +671,7 @@ func FilledPolygonColor(renderer *sdl.Renderer, vx, vy []int16, color sdl.Color)
 
 // FilledPolygonRGBA draws filled polygon with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a40ef0b898905c190c193f0f55deb5a6c)
-func FilledPolygonRGBA(renderer *sdl.Renderer, vx, vy []int16, r, g, b, a uint8) bool {
+func FilledPolygonRGBA(renderer sdl.Renderer, vx, vy []int16, r, g, b, a uint8) bool {
 	_vx := (*C.Sint16)(unsafe.Pointer(&vx[0]))
 	_vy := (*C.Sint16)(unsafe.Pointer(&vy[0]))
 	_len := C.int(min(len(vx), len(vy)))
@@ -684,7 +684,7 @@ func FilledPolygonRGBA(renderer *sdl.Renderer, vx, vy []int16, r, g, b, a uint8)
 
 // TexturedPolygon draws a polygon filled with the given texture.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a65137af308ea878f28abc95419e8aef5)
-func TexturedPolygon(renderer *sdl.Renderer, vx, vy []int16, surface *sdl.Surface, textureDX, textureDY int) bool {
+func TexturedPolygon(renderer sdl.Renderer, vx, vy []int16, surface *sdl.Surface, textureDX, textureDY int) bool {
 	_vx := (*C.Sint16)(unsafe.Pointer(&vx[0]))
 	_vy := (*C.Sint16)(unsafe.Pointer(&vy[0]))
 	_surface := (*C.SDL_Surface)(unsafe.Pointer(surface))
@@ -696,7 +696,7 @@ func TexturedPolygon(renderer *sdl.Renderer, vx, vy []int16, surface *sdl.Surfac
 
 // BezierColor draws a bezier curve with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#adfe8f9c42d29a090aae15eeb19b80d51)
-func BezierColor(renderer *sdl.Renderer, vx, vy []int16, s int, color sdl.Color) bool {
+func BezierColor(renderer sdl.Renderer, vx, vy []int16, s int, color sdl.Color) bool {
 	_vx := (*C.Sint16)(unsafe.Pointer(&vx[0]))
 	_vy := (*C.Sint16)(unsafe.Pointer(&vy[0]))
 	_len := C.int(min(len(vx), len(vy)))
@@ -707,7 +707,7 @@ func BezierColor(renderer *sdl.Renderer, vx, vy []int16, s int, color sdl.Color)
 
 // BezierRGBA draws a bezier curve with alpha blending.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a4b7fbf6cc366abdf345a25308d53e125)
-func BezierRGBA(renderer *sdl.Renderer, vx, vy []int16, s int, r, g, b, a uint8) bool {
+func BezierRGBA(renderer sdl.Renderer, vx, vy []int16, s int, r, g, b, a uint8) bool {
 	_vx := (*C.Sint16)(unsafe.Pointer(&vx[0]))
 	_vy := (*C.Sint16)(unsafe.Pointer(&vy[0]))
 	_len := C.int(min(len(vx), len(vy)))
@@ -739,7 +739,7 @@ func SetFontRotation(rotation uint32) {
 
 // CharacterColor draws a character of the currently set font. On first call for a particular character and color combination, the function needs to generate the character surface (slower). Subsequent calls blit a cached surface (fast). Uses alpha blending if A<255 in color.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#aef5fdeb16c4578d8cd50e106299e993e)
-func CharacterColor(renderer *sdl.Renderer, x, y int32, c byte, color sdl.Color) bool {
+func CharacterColor(renderer sdl.Renderer, x, y int32, c byte, color sdl.Color) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_c := C.char(c)
@@ -749,7 +749,7 @@ func CharacterColor(renderer *sdl.Renderer, x, y int32, c byte, color sdl.Color)
 
 // CharacterRGBA draws a character of the currently set font.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a96379d2ce808aa642afb57bced0c670e)
-func CharacterRGBA(renderer *sdl.Renderer, x, y int32, c, r, g, b, a uint8) bool {
+func CharacterRGBA(renderer sdl.Renderer, x, y int32, c, r, g, b, a uint8) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_c := C.char(c)
@@ -762,7 +762,7 @@ func CharacterRGBA(renderer *sdl.Renderer, x, y int32, c, r, g, b, a uint8) bool
 
 // StringColor draws a string in the currently set font. The spacing between consequtive characters in the string is the fixed number of pixels of the character width of the current global font.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a62d2ba55abc7673f2dfa29e6bbffefdf)
-func StringColor(renderer *sdl.Renderer, x, y int32, s string, color sdl.Color) bool {
+func StringColor(renderer sdl.Renderer, x, y int32, s string, color sdl.Color) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_s := C.CString(s)
@@ -772,7 +772,7 @@ func StringColor(renderer *sdl.Renderer, x, y int32, s string, color sdl.Color) 
 
 // StringRGBA draws a string in the currently set font.
 // (http://www.ferzkopp.net/Software/SDL_gfx-2.0/Docs/html/_s_d_l__gfx_primitives_8c.html#a6ca71826e311bdd9acf13b009256aa1c)
-func StringRGBA(renderer *sdl.Renderer, x, y int32, s string, r, g, b, a uint8) bool {
+func StringRGBA(renderer sdl.Renderer, x, y int32, s string, r, g, b, a uint8) bool {
 	_x := C.Sint16(x)
 	_y := C.Sint16(y)
 	_s := C.CString(s)
