@@ -6,7 +6,7 @@ import (
 
 func TestSurface(t *testing.T) {
 	Do(func() {
-		var window *Window
+		var window Window
 		var surface *Surface
 		var image *Surface
 		var err error

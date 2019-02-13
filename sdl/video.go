@@ -306,7 +306,7 @@ type DisplayMode struct {
 type cDisplayMode C.SDL_DisplayMode
 
 // Window is a type used to identify a window.
-type Window C.SDL_Window
+type Window uintptr
 
 // GLContext is an opaque handle to an OpenGL context.
 type GLContext C.SDL_GLContext
@@ -343,7 +343,7 @@ type MessageBoxButtonData struct {
 // (https://wiki.libsdl.org/SDL_MessageBoxData)
 type MessageBoxData struct {
 	Flags       uint32                 // MESSAGEBOX_ERROR, MESSAGEBOX_WARNING, MESSAGEBOX_INFORMATION
-	Window      *Window                // an parent window, can be nil
+	Window      Window                 // an parent window, can be nil
 	Title       string                 // an UTF-8 title
 	Message     string                 // an UTF-8 message text
 	NumButtons  int32                  // the number of buttons
@@ -351,7 +351,7 @@ type MessageBoxData struct {
 	ColorScheme *MessageBoxColorScheme // a MessageBoxColorScheme, can be nil to use system settings
 }
 
-func (window *Window) cptr() *C.SDL_Window {
+func (window Window) cptr() *C.SDL_Window {
 	return (*C.SDL_Window)(unsafe.Pointer(window))
 }
 
@@ -499,21 +499,21 @@ func GetDisplayDPI(displayIndex int) (ddpi, hdpi, vdpi float32, err error) {
 
 // GetDisplayIndex returns the index of the display associated with the window.
 // (https://wiki.libsdl.org/SDL_GetWindowDisplayIndex)
-func (window *Window) GetDisplayIndex() (int, error) {
+func (window Window) GetDisplayIndex() (int, error) {
 	i := int(C.SDL_GetWindowDisplayIndex(window.cptr()))
 	return i, errorFromInt(i)
 }
 
 // SetDisplayMode sets the display mode to use when the window is visible at fullscreen.
 // (https://wiki.libsdl.org/SDL_SetWindowDisplayMode)
-func (window *Window) SetDisplayMode(mode *DisplayMode) error {
+func (window Window) SetDisplayMode(mode *DisplayMode) error {
 	return errorFromInt(int(
 		C.SDL_SetWindowDisplayMode(window.cptr(), mode.cptr())))
 }
 
 // GetDisplayMode fills in information about the display mode to use when the window is visible at fullscreen.
 // (https://wiki.libsdl.org/SDL_GetWindowDisplayMode)
-func (window *Window) GetDisplayMode() (mode DisplayMode, err error) {
+func (window Window) GetDisplayMode() (mode DisplayMode, err error) {
 	err = errorFromInt(int(
 		C.SDL_GetWindowDisplayMode(window.cptr(), (&mode).cptr())))
 	return
@@ -521,7 +521,7 @@ func (window *Window) GetDisplayMode() (mode DisplayMode, err error) {
 
 // GetPixelFormat returns the pixel format associated with the window.
 // (https://wiki.libsdl.org/SDL_GetWindowPixelFormat)
-func (window *Window) GetPixelFormat() (uint32, error) {
+func (window Window) GetPixelFormat() (uint32, error) {
 	f := (uint32)(C.SDL_GetWindowPixelFormat(window.cptr()))
 	if f == PIXELFORMAT_UNKNOWN {
 		return f, GetError()
@@ -531,27 +531,27 @@ func (window *Window) GetPixelFormat() (uint32, error) {
 
 // CreateWindow creates a window with the specified position, dimensions, and flags.
 // (https://wiki.libsdl.org/SDL_CreateWindow)
-func CreateWindow(title string, x, y, w, h int32, flags uint32) (*Window, error) {
+func CreateWindow(title string, x, y, w, h int32, flags uint32) (Window, error) {
 	var _window = C.SDL_CreateWindow(C.CString(title), C.int(x), C.int(y), C.int(w), C.int(h), C.Uint32(flags))
 	if _window == nil {
-		return nil, GetError()
+		return 0, GetError()
 	}
-	return (*Window)(unsafe.Pointer(_window)), nil
+	return Window(unsafe.Pointer(_window)), nil
 }
 
 // CreateWindowFrom creates an SDL window from an existing native window.
 // (https://wiki.libsdl.org/SDL_CreateWindowFrom)
-func CreateWindowFrom(data unsafe.Pointer) (*Window, error) {
+func CreateWindowFrom(data unsafe.Pointer) (Window, error) {
 	_window := C.SDL_CreateWindowFrom(data)
 	if _window == nil {
-		return nil, GetError()
+		return 0, GetError()
 	}
-	return (*Window)(unsafe.Pointer(_window)), nil
+	return Window(unsafe.Pointer(_window)), nil
 }
 
 // Destroy destroys the window.
 // (https://wiki.libsdl.org/SDL_DestroyWindow)
-func (window *Window) Destroy() error {
+func (window Window) Destroy() error {
 	lastErr := GetError()
 	ClearError()
 	C.SDL_DestroyWindow(window.cptr())
@@ -565,7 +565,7 @@ func (window *Window) Destroy() error {
 
 // GetID returns the numeric ID of the window, for logging purposes.
 //  (https://wiki.libsdl.org/SDL_GetWindowID)
-func (window *Window) GetID() (uint32, error) {
+func (window Window) GetID() (uint32, error) {
 	id := uint32(C.SDL_GetWindowID(window.cptr()))
 	if id == 0 {
 		return 0, GetError()
@@ -575,59 +575,59 @@ func (window *Window) GetID() (uint32, error) {
 
 // GetWindowFromID returns a window from a stored ID.
 // (https://wiki.libsdl.org/SDL_GetWindowFromID)
-func GetWindowFromID(id uint32) (*Window, error) {
+func GetWindowFromID(id uint32) (Window, error) {
 	_window := C.SDL_GetWindowFromID(C.Uint32(id))
 	if _window == nil {
-		return nil, GetError()
+		return 0, GetError()
 	}
-	return (*Window)(unsafe.Pointer((_window))), nil
+	return Window(unsafe.Pointer((_window))), nil
 }
 
 // GetFlags returns the window flags.
 // (https://wiki.libsdl.org/SDL_GetWindowFlags)
-func (window *Window) GetFlags() uint32 {
+func (window Window) GetFlags() uint32 {
 	return (uint32)(C.SDL_GetWindowFlags(window.cptr()))
 }
 
 // SetTitle sets the title of the window.
 // (https://wiki.libsdl.org/SDL_SetWindowTitle)
-func (window *Window) SetTitle(title string) {
+func (window Window) SetTitle(title string) {
 	C.SDL_SetWindowTitle(window.cptr(), C.CString(title))
 }
 
 // GetTitle returns the title of the window.
 // (https://wiki.libsdl.org/SDL_GetWindowTitle)
-func (window *Window) GetTitle() string {
+func (window Window) GetTitle() string {
 	return C.GoString(C.SDL_GetWindowTitle(window.cptr()))
 }
 
 // SetIcon sets the icon for the window.
 // (https://wiki.libsdl.org/SDL_SetWindowIcon)
-func (window *Window) SetIcon(icon *Surface) {
+func (window Window) SetIcon(icon *Surface) {
 	C.SDL_SetWindowIcon(window.cptr(), icon.cptr())
 }
 
 // SetData associates an arbitrary named pointer with the window.
 // (https://wiki.libsdl.org/SDL_SetWindowData)
-func (window *Window) SetData(name string, userdata unsafe.Pointer) unsafe.Pointer {
+func (window Window) SetData(name string, userdata unsafe.Pointer) unsafe.Pointer {
 	return unsafe.Pointer(C.SDL_SetWindowData(window.cptr(), C.CString(name), userdata))
 }
 
 // GetData returns the data pointer associated with the window.
 // (https://wiki.libsdl.org/SDL_GetWindowData)
-func (window *Window) GetData(name string) unsafe.Pointer {
+func (window Window) GetData(name string) unsafe.Pointer {
 	return unsafe.Pointer(C.SDL_GetWindowData(window.cptr(), C.CString(name)))
 }
 
 // SetPosition sets the position of the window.
 // (https://wiki.libsdl.org/SDL_SetWindowPosition)
-func (window *Window) SetPosition(x, y int32) {
+func (window Window) SetPosition(x, y int32) {
 	C.SDL_SetWindowPosition(window.cptr(), C.int(x), C.int(y))
 }
 
 // GetPosition returns the position of the window.
 // (https://wiki.libsdl.org/SDL_GetWindowPosition)
-func (window *Window) GetPosition() (x, y int32) {
+func (window Window) GetPosition() (x, y int32) {
 	var _x, _y C.int
 	C.SDL_GetWindowPosition(window.cptr(), &_x, &_y)
 	return int32(_x), int32(_y)
@@ -635,19 +635,19 @@ func (window *Window) GetPosition() (x, y int32) {
 
 // SetResizable sets the user-resizable state of the window.
 // (https://wiki.libsdl.org/SDL_SetWindowResizable)
-func (window *Window) SetResizable(resizable bool) {
+func (window Window) SetResizable(resizable bool) {
 	C.SDL_SetWindowResizable(window.cptr(), C.SDL_bool(Btoi(resizable)))
 }
 
 // SetSize sets the size of the window's client area.
 // (https://wiki.libsdl.org/SDL_SetWindowSize)
-func (window *Window) SetSize(w, h int32) {
+func (window Window) SetSize(w, h int32) {
 	C.SDL_SetWindowSize(window.cptr(), C.int(w), C.int(h))
 }
 
 // GetSize returns the size of the window's client area.
 // (https://wiki.libsdl.org/SDL_GetWindowSize)
-func (window *Window) GetSize() (w, h int32) {
+func (window Window) GetSize() (w, h int32) {
 	var _w, _h C.int
 	C.SDL_GetWindowSize(window.cptr(), &_w, &_h)
 	return int32(_w), int32(_h)
@@ -655,13 +655,13 @@ func (window *Window) GetSize() (w, h int32) {
 
 // SetMinimumSize sets the minimum size of the window's client area.
 // (https://wiki.libsdl.org/SDL_SetWindowMinimumSize)
-func (window *Window) SetMinimumSize(minW, minH int32) {
+func (window Window) SetMinimumSize(minW, minH int32) {
 	C.SDL_SetWindowMinimumSize(window.cptr(), C.int(minW), C.int(minH))
 }
 
 // GetMinimumSize returns the minimum size of the window's client area.
 // (https://wiki.libsdl.org/SDL_GetWindowMinimumSize)
-func (window *Window) GetMinimumSize() (w, h int32) {
+func (window Window) GetMinimumSize() (w, h int32) {
 	var _w, _h C.int
 	C.SDL_GetWindowMinimumSize(window.cptr(), &_w, &_h)
 	return int32(_w), int32(_h)
@@ -669,13 +669,13 @@ func (window *Window) GetMinimumSize() (w, h int32) {
 
 // SetMaximumSize sets the maximum size of the window's client area.
 // (https://wiki.libsdl.org/SDL_SetWindowMaximumSize)
-func (window *Window) SetMaximumSize(maxW, maxH int32) {
+func (window Window) SetMaximumSize(maxW, maxH int32) {
 	C.SDL_SetWindowMaximumSize(window.cptr(), C.int(maxW), C.int(maxH))
 }
 
 // GetMaximumSize returns the maximum size of the window's client area.
 // (https://wiki.libsdl.org/SDL_GetWindowMaximumSize)
-func (window *Window) GetMaximumSize() (w, h int32) {
+func (window Window) GetMaximumSize() (w, h int32) {
 	var _w, _h C.int
 	C.SDL_GetWindowMaximumSize(window.cptr(), &_w, &_h)
 	return int32(_w), int32(_h)
@@ -683,56 +683,56 @@ func (window *Window) GetMaximumSize() (w, h int32) {
 
 // SetBordered sets the border state of the window.
 // (https://wiki.libsdl.org/SDL_SetWindowBordered)
-func (window *Window) SetBordered(bordered bool) {
+func (window Window) SetBordered(bordered bool) {
 	C.SDL_SetWindowBordered(window.cptr(), C.SDL_bool(Btoi(bordered)))
 }
 
 // Show shows the window.
 // (https://wiki.libsdl.org/SDL_ShowWindow)
-func (window *Window) Show() {
+func (window Window) Show() {
 	C.SDL_ShowWindow(window.cptr())
 }
 
 // Hide hides the window.
 // (https://wiki.libsdl.org/SDL_HideWindow)
-func (window *Window) Hide() {
+func (window Window) Hide() {
 	C.SDL_HideWindow(window.cptr())
 }
 
 // Raise raises the window above other windows and set the input focus.
 // (https://wiki.libsdl.org/SDL_RaiseWindow)
-func (window *Window) Raise() {
+func (window Window) Raise() {
 	C.SDL_RaiseWindow(window.cptr())
 }
 
 // Maximize makes the window as large as possible.
 // (https://wiki.libsdl.org/SDL_MaximizeWindow)
-func (window *Window) Maximize() {
+func (window Window) Maximize() {
 	C.SDL_MaximizeWindow(window.cptr())
 }
 
 // Minimize minimizes the window to an iconic representation.
 // (https://wiki.libsdl.org/SDL_MinimizeWindow)
-func (window *Window) Minimize() {
+func (window Window) Minimize() {
 	C.SDL_MinimizeWindow(window.cptr())
 }
 
 // Restore restores the size and position of a minimized or maximized window.
 // (https://wiki.libsdl.org/SDL_RestoreWindow)
-func (window *Window) Restore() {
+func (window Window) Restore() {
 	C.SDL_RestoreWindow(window.cptr())
 }
 
 // SetFullscreen sets the window's fullscreen state.
 // (https://wiki.libsdl.org/SDL_SetWindowFullscreen)
-func (window *Window) SetFullscreen(flags uint32) error {
+func (window Window) SetFullscreen(flags uint32) error {
 	return errorFromInt(int(
 		C.SDL_SetWindowFullscreen(window.cptr(), C.Uint32(flags))))
 }
 
 // GetSurface returns the SDL surface associated with the window.
 // (https://wiki.libsdl.org/SDL_GetWindowSurface)
-func (window *Window) GetSurface() (*Surface, error) {
+func (window Window) GetSurface() (*Surface, error) {
 	surface := (*Surface)(unsafe.Pointer(C.SDL_GetWindowSurface(window.cptr())))
 	if surface == nil {
 		return nil, GetError()
@@ -742,46 +742,46 @@ func (window *Window) GetSurface() (*Surface, error) {
 
 // UpdateSurface copies the window surface to the screen.
 // (https://wiki.libsdl.org/SDL_UpdateWindowSurface)
-func (window *Window) UpdateSurface() error {
+func (window Window) UpdateSurface() error {
 	return errorFromInt(int(
 		C.SDL_UpdateWindowSurface(window.cptr())))
 }
 
 // UpdateSurfaceRects copies areas of the window surface to the screen.
 // (https://wiki.libsdl.org/SDL_UpdateWindowSurfaceRects)
-func (window *Window) UpdateSurfaceRects(rects []Rect) error {
+func (window Window) UpdateSurfaceRects(rects []Rect) error {
 	return errorFromInt(int(
 		C.SDL_UpdateWindowSurfaceRects(window.cptr(), rects[0].cptr(), C.int(len(rects)))))
 }
 
 // SetGrab sets the window's input grab mode.
 // (https://wiki.libsdl.org/SDL_SetWindowGrab)
-func (window *Window) SetGrab(grabbed bool) {
+func (window Window) SetGrab(grabbed bool) {
 	C.SDL_SetWindowGrab(window.cptr(), C.SDL_bool((Btoi(grabbed))))
 }
 
 // GetGrab returns the window's input grab mode.
 // (https://wiki.libsdl.org/SDL_GetWindowGrab)
-func (window *Window) GetGrab() bool {
+func (window Window) GetGrab() bool {
 	return C.SDL_GetWindowGrab(window.cptr()) != 0
 }
 
 // SetBrightness sets the brightness (gamma multiplier) for the display that owns the given window.
 // (https://wiki.libsdl.org/SDL_SetWindowBrightness)
-func (window *Window) SetBrightness(brightness float32) error {
+func (window Window) SetBrightness(brightness float32) error {
 	return errorFromInt(int(
 		C.SDL_SetWindowBrightness(window.cptr(), C.float(brightness))))
 }
 
 // GetBrightness returns the brightness (gamma multiplier) for the display that owns the given window.
 // (https://wiki.libsdl.org/SDL_GetWindowBrightness)
-func (window *Window) GetBrightness() float32 {
+func (window Window) GetBrightness() float32 {
 	return float32(C.SDL_GetWindowBrightness(window.cptr()))
 }
 
 // SetGammaRamp sets the gamma ramp for the display that owns the given window.
 // (https://wiki.libsdl.org/SDL_SetWindowGammaRamp)
-func (window *Window) SetGammaRamp(red, green, blue *[256]uint16) error {
+func (window Window) SetGammaRamp(red, green, blue *[256]uint16) error {
 	return errorFromInt(int(
 		C.SDL_SetWindowGammaRamp(
 			window.cptr(),
@@ -792,7 +792,7 @@ func (window *Window) SetGammaRamp(red, green, blue *[256]uint16) error {
 
 // GetGammaRamp returns the gamma ramp for the display that owns a given window.
 // (https://wiki.libsdl.org/SDL_GetWindowGammaRamp)
-func (window *Window) GetGammaRamp() (red, green, blue *[256]uint16, err error) {
+func (window Window) GetGammaRamp() (red, green, blue *[256]uint16, err error) {
 	code := int(C.SDL_GetWindowGammaRamp(
 		window.cptr(),
 		(*C.Uint16)(unsafe.Pointer(red)),
@@ -803,21 +803,21 @@ func (window *Window) GetGammaRamp() (red, green, blue *[256]uint16, err error) 
 
 // SetWindowOpacity sets the opacity of the window.
 // (https://wiki.libsdl.org/SDL_SetWindowOpacity)
-func (window *Window) SetWindowOpacity(opacity float32) error {
+func (window Window) SetWindowOpacity(opacity float32) error {
 	return errorFromInt(int(
 		C.SDL_SetWindowOpacity(window.cptr(), C.float(opacity))))
 }
 
 // GetWindowOpacity returns the opacity of the window.
 // (https://wiki.libsdl.org/SDL_GetWindowOpacity)
-func (window *Window) GetWindowOpacity() (opacity float32, err error) {
+func (window Window) GetWindowOpacity() (opacity float32, err error) {
 	return opacity, errorFromInt(int(
 		C.SDL_GetWindowOpacity(window.cptr(), (*C.float)(unsafe.Pointer(&opacity)))))
 }
 
 // ShowSimpleMessageBox displays a simple modal message box.
 // (https://wiki.libsdl.org/SDL_ShowSimpleMessageBox)
-func ShowSimpleMessageBox(flags uint32, title, message string, window *Window) error {
+func ShowSimpleMessageBox(flags uint32, title, message string, window Window) error {
 	_title := C.CString(title)
 	defer C.free(unsafe.Pointer(_title))
 	_message := C.CString(message)
@@ -930,7 +930,7 @@ func GLGetAttribute(attr GLattr) (int, error) {
 
 // GLCreateContext creates an OpenGL context for use with an OpenGL window, and make it current.
 // (https://wiki.libsdl.org/SDL_GL_CreateContext)
-func (window *Window) GLCreateContext() (GLContext, error) {
+func (window Window) GLCreateContext() (GLContext, error) {
 	c := GLContext(C.SDL_GL_CreateContext(window.cptr()))
 	if c == nil {
 		return nil, GetError()
@@ -940,7 +940,7 @@ func (window *Window) GLCreateContext() (GLContext, error) {
 
 // GLMakeCurrent sets up an OpenGL context for rendering into an OpenGL window.
 // (https://wiki.libsdl.org/SDL_GL_MakeCurrent)
-func (window *Window) GLMakeCurrent(glcontext GLContext) error {
+func (window Window) GLMakeCurrent(glcontext GLContext) error {
 	return errorFromInt(int(
 		C.SDL_GL_MakeCurrent(window.cptr(), C.SDL_GLContext(glcontext))))
 }
@@ -961,7 +961,7 @@ func GLGetSwapInterval() (int, error) {
 
 // GLGetDrawableSize returns the size of a window's underlying drawable in pixels (for use with glViewport).
 // (https://wiki.libsdl.org/SDL_GL_GetDrawableSize)
-func (window *Window) GLGetDrawableSize() (w, h int32) {
+func (window Window) GLGetDrawableSize() (w, h int32) {
 	var _w, _h C.int
 	C.SDL_GL_GetDrawableSize(window.cptr(), &_w, &_h)
 	return int32(_w), int32(_h)
@@ -969,7 +969,7 @@ func (window *Window) GLGetDrawableSize() (w, h int32) {
 
 // GLSwap updates a window with OpenGL rendering.
 // (https://wiki.libsdl.org/SDL_GL_SwapWindow)
-func (window *Window) GLSwap() {
+func (window Window) GLSwap() {
 	C.SDL_GL_SwapWindow(window.cptr())
 }
 

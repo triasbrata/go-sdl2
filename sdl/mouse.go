@@ -96,8 +96,8 @@ func (c SystemCursor) c() C.SDL_SystemCursor {
 
 // GetMouseFocus returns the window which currently has mouse focus.
 // (https://wiki.libsdl.org/SDL_GetMouseFocus)
-func GetMouseFocus() *Window {
-	return (*Window)(unsafe.Pointer(C.SDL_GetMouseFocus()))
+func GetMouseFocus() Window {
+	return Window(unsafe.Pointer(C.SDL_GetMouseFocus()))
 }
 
 // GetMouseState returns the current state of the mouse.
@@ -118,7 +118,7 @@ func GetRelativeMouseState() (x, y int32, state uint32) {
 
 // WarpMouseInWindow moves the mouse to the given position within the window.
 // (https://wiki.libsdl.org/SDL_WarpMouseInWindow)
-func (window *Window) WarpMouseInWindow(x, y int32) {
+func (window Window) WarpMouseInWindow(x, y int32) {
 	C.SDL_WarpMouseInWindow(window.cptr(), C.int(x), C.int(y))
 }
 

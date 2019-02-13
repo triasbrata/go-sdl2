@@ -16,8 +16,8 @@ type Keysym struct {
 
 // GetKeyboardFocus returns the window which currently has keyboard focus.
 // (https://wiki.libsdl.org/SDL_GetKeyboardFocus)
-func GetKeyboardFocus() *Window {
-	return (*Window)(unsafe.Pointer(C.SDL_GetKeyboardFocus()))
+func GetKeyboardFocus() Window {
+	return Window(unsafe.Pointer(C.SDL_GetKeyboardFocus()))
 }
 
 // GetKeyboardState returns a snapshot of the current state of the keyboard.
@@ -116,6 +116,6 @@ func HasScreenKeyboardSupport() bool {
 
 // IsScreenKeyboardShown reports whether the screen keyboard is shown for given window.
 // (https://wiki.libsdl.org/SDL_IsScreenKeyboardShown)
-func IsScreenKeyboardShown(window *Window) bool {
+func IsScreenKeyboardShown(window Window) bool {
 	return C.SDL_IsScreenKeyboardShown(window.cptr()) > 0
 }

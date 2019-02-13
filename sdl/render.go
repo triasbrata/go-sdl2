@@ -140,7 +140,7 @@ func GetRenderDriverInfo(index int, info *RendererInfo) (int, error) {
 
 // CreateWindowAndRenderer returns a new window and default renderer.
 // (https://wiki.libsdl.org/SDL_CreateWindowAndRenderer)
-func CreateWindowAndRenderer(w, h int32, flags uint32) (*Window, Renderer, error) {
+func CreateWindowAndRenderer(w, h int32, flags uint32) (Window, Renderer, error) {
 	var window *C.SDL_Window
 	var renderer *C.SDL_Renderer
 	ret := C.SDL_CreateWindowAndRenderer(
@@ -150,14 +150,14 @@ func CreateWindowAndRenderer(w, h int32, flags uint32) (*Window, Renderer, error
 		&window,
 		&renderer)
 	if ret == -1 {
-		return nil, 0, GetError()
+		return 0, 0, GetError()
 	}
-	return (*Window)(unsafe.Pointer(window)), Renderer(unsafe.Pointer(renderer)), nil
+	return Window(unsafe.Pointer(window)), Renderer(unsafe.Pointer(renderer)), nil
 }
 
 // CreateRenderer returns a new 2D rendering context for a window.
 // (https://wiki.libsdl.org/SDL_CreateRenderer)
-func CreateRenderer(window *Window, index int, flags uint32) (Renderer, error) {
+func CreateRenderer(window Window, index int, flags uint32) (Renderer, error) {
 	renderer := C.SDL_CreateRenderer(window.cptr(), C.int(index), C.Uint32(flags))
 	if renderer == nil {
 		return 0, GetError()
@@ -177,7 +177,7 @@ func CreateSoftwareRenderer(surface *Surface) (Renderer, error) {
 
 // GetRenderer returns the renderer associated with a window.
 // (https://wiki.libsdl.org/SDL_GetRenderer)
-func (window *Window) GetRenderer() (Renderer, error) {
+func (window Window) GetRenderer() (Renderer, error) {
 	renderer := C.SDL_GetRenderer(window.cptr())
 	if renderer == nil {
 		return 0, GetError()

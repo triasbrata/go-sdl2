@@ -6,7 +6,7 @@ import (
 
 func TestWindow(t *testing.T) {
 	Do(func() {
-		var window *Window
+		var window Window
 		var err error
 
 		Init(INIT_EVERYTHING)
