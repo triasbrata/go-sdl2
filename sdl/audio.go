@@ -408,7 +408,7 @@ func PauseAudioDevice(dev AudioDeviceID, pauseOn bool) {
 
 // LoadWAVRW loads a WAVE from the data source, automatically freeing that source if freeSrc is true.
 // (https://wiki.libsdl.org/SDL_LoadWAV_RW)
-func LoadWAVRW(src *RWops, freeSrc bool) ([]byte, *AudioSpec) {
+func LoadWAVRW(src RWops, freeSrc bool) ([]byte, *AudioSpec) {
 	var _audioBuf *C.Uint8
 	var _audioLen C.Uint32
 	audioSpec := (*AudioSpec)(unsafe.Pointer(C.SDL_LoadWAV_RW(src.cptr(), C.int(Btoi(freeSrc)), (&AudioSpec{}).cptr(), &_audioBuf, &_audioLen)))

@@ -248,7 +248,7 @@ func (surface *Surface) Unlock() {
 
 // LoadBMPRW loads a BMP image from a seekable SDL data stream (memory or file).
 // (https://wiki.libsdl.org/SDL_LoadBMP_RW)
-func LoadBMPRW(src *RWops, freeSrc bool) (*Surface, error) {
+func LoadBMPRW(src RWops, freeSrc bool) (*Surface, error) {
 	surface := (*Surface)(unsafe.Pointer(C.SDL_LoadBMP_RW(src.cptr(), C.int(Btoi(freeSrc)))))
 	if surface == nil {
 		return nil, GetError()
@@ -264,7 +264,7 @@ func LoadBMP(file string) (*Surface, error) {
 
 // SaveBMPRW save the surface to a seekable SDL data stream (memory or file) in BMP format.
 // (https://wiki.libsdl.org/SDL_SaveBMP_RW)
-func (surface *Surface) SaveBMPRW(dst *RWops, freeDst bool) error {
+func (surface *Surface) SaveBMPRW(dst RWops, freeDst bool) error {
 	if C.SDL_SaveBMP_RW(surface.cptr(), dst.cptr(), C.int(Btoi(freeDst))) != 0 {
 		return GetError()
 	}

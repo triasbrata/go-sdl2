@@ -18,18 +18,18 @@ func RecordGesture(t TouchID) int {
 
 // SaveAllDollarTemplates saves all currently loaded Dollar Gesture templates.
 // (https://wiki.libsdl.org/SDL_SaveAllDollarTemplates)
-func SaveAllDollarTemplates(src *RWops) int {
+func SaveAllDollarTemplates(src RWops) int {
 	return int(C.SDL_SaveAllDollarTemplates(src.cptr()))
 }
 
 // SaveDollarTemplate saves a currently loaded Dollar Gesture template.
 // (https://wiki.libsdl.org/SDL_SaveDollarTemplate)
-func SaveDollarTemplate(g GestureID, src *RWops) int {
+func SaveDollarTemplate(g GestureID, src RWops) int {
 	return int(C.SDL_SaveDollarTemplate(g.c(), src.cptr()))
 }
 
 // LoadDollarTemplates loads Dollar Gesture templates from a file.
 // (https://wiki.libsdl.org/SDL_LoadDollarTemplates)
-func LoadDollarTemplates(t TouchID, src *RWops) int {
+func LoadDollarTemplates(t TouchID, src RWops) int {
 	return int(C.SDL_LoadDollarTemplates(t.c(), src.cptr()))
 }
