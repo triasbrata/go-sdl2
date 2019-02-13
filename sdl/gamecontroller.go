@@ -232,8 +232,8 @@ func (ctrl GameController) Mapping() string {
 
 // Joystick returns the Joystick ID from a Game Controller. The game controller builds on the Joystick API, but to be able to use the Joystick's functions with a gamepad, you need to use this first to get the joystick object.
 // (https://wiki.libsdl.org/SDL_GameControllerGetJoystick)
-func (ctrl GameController) Joystick() *Joystick {
-	return (*Joystick)(unsafe.Pointer(C.SDL_GameControllerGetJoystick(ctrl.cptr())))
+func (ctrl GameController) Joystick() Joystick {
+	return Joystick(unsafe.Pointer(C.SDL_GameControllerGetJoystick(ctrl.cptr())))
 }
 
 // GameControllerEventState returns the current state of, enable, or disable events dealing with Game Controllers. This will not disable Joystick events, which can also be fired by a controller (see https://wiki.libsdl.org/SDL_JoystickEventState).

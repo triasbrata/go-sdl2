@@ -228,7 +228,7 @@ const (
 )
 
 // Joystick is an SDL joystick.
-type Joystick C.SDL_Joystick
+type Joystick uintptr
 
 // JoystickGUID is a stable unique id for a joystick device.
 type JoystickGUID C.SDL_JoystickGUID
@@ -242,7 +242,7 @@ type JoystickType C.SDL_JoystickType
 // JoystickPowerLevel is a battery level of a joystick.
 type JoystickPowerLevel C.SDL_JoystickPowerLevel
 
-func (joy *Joystick) cptr() *C.SDL_Joystick {
+func (joy Joystick) cptr() *C.SDL_Joystick {
 	return (*C.SDL_Joystick)(unsafe.Pointer(joy))
 }
 
@@ -329,14 +329,14 @@ func JoystickEventState(state int) int {
 
 // JoystickOpen opens a joystick for use.
 // (https://wiki.libsdl.org/SDL_JoystickOpen)
-func JoystickOpen(index int) *Joystick {
-	return (*Joystick)(C.SDL_JoystickOpen(C.int(index)))
+func JoystickOpen(index int) Joystick {
+	return Joystick(unsafe.Pointer(C.SDL_JoystickOpen(C.int(index))))
 }
 
 // JoystickFromInstanceID returns the Joystick associated with an instance id.
 // (https://wiki.libsdl.org/SDL_JoystickFromInstanceID)
-func JoystickFromInstanceID(joyid JoystickID) *Joystick {
-	return (*Joystick)(C.SDL_JoystickFromInstanceID(joyid.c()))
+func JoystickFromInstanceID(joyid JoystickID) Joystick {
+	return Joystick(unsafe.Pointer(C.SDL_JoystickFromInstanceID(joyid.c())))
 }
 
 // LockJoysticks locks joysticks for multi-threaded access to the joystick API
@@ -353,93 +353,93 @@ func UnlockJoysticks() {
 
 // Name returns the implementation dependent name of a joystick.
 // (https://wiki.libsdl.org/SDL_JoystickName)
-func (joy *Joystick) Name() string {
+func (joy Joystick) Name() string {
 	return (C.GoString)(C.SDL_JoystickName(joy.cptr()))
 }
 
 // GUID returns the implementation-dependent GUID for the joystick.
 // (https://wiki.libsdl.org/SDL_JoystickGetGUID)
-func (joy *Joystick) GUID() JoystickGUID {
+func (joy Joystick) GUID() JoystickGUID {
 	return (JoystickGUID)(C.SDL_JoystickGetGUID(joy.cptr()))
 }
 
 // Vendor returns the USB vendor ID of an opened joystick, if available, 0 otherwise.
-func (joy *Joystick) Vendor() int {
+func (joy Joystick) Vendor() int {
 	return int(C.SDL_JoystickGetVendor(joy.cptr()))
 }
 
 // Product returns the USB product ID of an opened joystick, if available, 0 otherwise.
-func (joy *Joystick) Product() int {
+func (joy Joystick) Product() int {
 	return int(C.SDL_JoystickGetProduct(joy.cptr()))
 }
 
 // ProductVersion returns the product version of an opened joystick, if available, 0 otherwise.
-func (joy *Joystick) ProductVersion() int {
+func (joy Joystick) ProductVersion() int {
 	return int(C.SDL_JoystickGetProductVersion(joy.cptr()))
 }
 
 // Type returns the the type of an opened joystick.
-func (joy *Joystick) Type() JoystickType {
+func (joy Joystick) Type() JoystickType {
 	return JoystickType(C.SDL_JoystickGetType(joy.cptr()))
 }
 
 // Attached returns the status of a specified joystick.
 // (https://wiki.libsdl.org/SDL_JoystickGetAttached)
-func (joy *Joystick) Attached() bool {
+func (joy Joystick) Attached() bool {
 	return C.SDL_JoystickGetAttached(joy.cptr()) == C.SDL_TRUE
 }
 
 // InstanceID returns the instance ID of an opened joystick.
 // (https://wiki.libsdl.org/SDL_JoystickInstanceID)
-func (joy *Joystick) InstanceID() JoystickID {
+func (joy Joystick) InstanceID() JoystickID {
 	return (JoystickID)(C.SDL_JoystickInstanceID(joy.cptr()))
 }
 
 // NumAxes returns the number of general axis controls on a joystick.
 // (https://wiki.libsdl.org/SDL_JoystickNumAxes)
-func (joy *Joystick) NumAxes() int {
+func (joy Joystick) NumAxes() int {
 	return (int)(C.SDL_JoystickNumAxes(joy.cptr()))
 }
 
 // NumBalls returns the number of trackballs on a joystick.
 // (https://wiki.libsdl.org/SDL_JoystickNumBalls)
-func (joy *Joystick) NumBalls() int {
+func (joy Joystick) NumBalls() int {
 	return (int)(C.SDL_JoystickNumBalls(joy.cptr()))
 }
 
 // NumHats returns the number of POV hats on a joystick.
 // (https://wiki.libsdl.org/SDL_JoystickNumHats)
-func (joy *Joystick) NumHats() int {
+func (joy Joystick) NumHats() int {
 	return (int)(C.SDL_JoystickNumHats(joy.cptr()))
 }
 
 // NumButtons returns the number of buttons on a joystick.
 // (https://wiki.libsdl.org/SDL_JoystickNumButtons)
-func (joy *Joystick) NumButtons() int {
+func (joy Joystick) NumButtons() int {
 	return (int)(C.SDL_JoystickNumButtons(joy.cptr()))
 }
 
 // Axis returns the current state of an axis control on a joystick.
 // (https://wiki.libsdl.org/SDL_JoystickGetAxis)
-func (joy *Joystick) Axis(axis int) int16 {
+func (joy Joystick) Axis(axis int) int16 {
 	return (int16)(C.SDL_JoystickGetAxis(joy.cptr(), C.int(axis)))
 }
 
 // AxisInitialState returns the initial state of an axis control on a joystick, ok is true if this axis has any initial value.
-func (joy *Joystick) AxisInitialState(axis int) (state int16, ok bool) {
+func (joy Joystick) AxisInitialState(axis int) (state int16, ok bool) {
 	ok = C.SDL_JoystickGetAxisInitialState(joy.cptr(), C.int(axis), (*C.Sint16)(&state)) == C.SDL_TRUE
 	return
 }
 
 // Hat returns the current state of a POV hat on a joystick.
 // (https://wiki.libsdl.org/SDL_JoystickGetHat)
-func (joy *Joystick) Hat(hat int) byte {
+func (joy Joystick) Hat(hat int) byte {
 	return (byte)(C.SDL_JoystickGetHat(joy.cptr(), C.int(hat)))
 }
 
 // Ball returns the ball axis change since the last poll.
 // (https://wiki.libsdl.org/SDL_JoystickGetBall)
-func (joy *Joystick) Ball(ball int, dx, dy *int32) int {
+func (joy Joystick) Ball(ball int, dx, dy *int32) int {
 	_dx := (*C.int)(unsafe.Pointer(dx))
 	_dy := (*C.int)(unsafe.Pointer(dy))
 	return (int)(C.SDL_JoystickGetBall(joy.cptr(), C.int(ball), _dx, _dy))
@@ -447,18 +447,18 @@ func (joy *Joystick) Ball(ball int, dx, dy *int32) int {
 
 // Button the current state of a button on a joystick.
 // (https://wiki.libsdl.org/SDL_JoystickGetButton)
-func (joy *Joystick) Button(button int) byte {
+func (joy Joystick) Button(button int) byte {
 	return (byte)(C.SDL_JoystickGetButton(joy.cptr(), C.int(button)))
 }
 
 // Close closes a joystick previously opened with JoystickOpen().
 // (https://wiki.libsdl.org/SDL_JoystickClose)
-func (joy *Joystick) Close() {
+func (joy Joystick) Close() {
 	C.SDL_JoystickClose(joy.cptr())
 }
 
 // CurrentPowerLevel returns the battery level of a joystick as JoystickPowerLevel.
 // (https://wiki.libsdl.org/SDL_JoystickCurrentPowerLevel)
-func (joy *Joystick) CurrentPowerLevel() JoystickPowerLevel {
+func (joy Joystick) CurrentPowerLevel() JoystickPowerLevel {
 	return JoystickPowerLevel(C.SDL_JoystickCurrentPowerLevel(joy.cptr()))
 }

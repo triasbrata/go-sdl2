@@ -240,14 +240,14 @@ func HapticOpenFromMouse() (*Haptic, error) {
 
 // JoystickIsHaptic reports whether a joystick has haptic features.
 // (https://wiki.libsdl.org/SDL_JoystickIsHaptic)
-func JoystickIsHaptic(joy *Joystick) (bool, error) {
+func JoystickIsHaptic(joy Joystick) (bool, error) {
 	ret := int(C.SDL_JoystickIsHaptic(joy.cptr()))
 	return ret == C.SDL_TRUE, errorFromInt(ret)
 }
 
 // HapticOpenFromJoystick opens a haptic device for use from a joystick device.
 // (https://wiki.libsdl.org/SDL_HapticOpenFromJoystick)
-func HapticOpenFromJoystick(joy *Joystick) (*Haptic, error) {
+func HapticOpenFromJoystick(joy Joystick) (*Haptic, error) {
 	haptic := (*Haptic)(unsafe.Pointer(C.SDL_HapticOpenFromJoystick(joy.cptr())))
 	if haptic == nil {
 		return nil, GetError()
