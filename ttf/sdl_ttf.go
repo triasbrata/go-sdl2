@@ -7,7 +7,7 @@ package ttf
 //    TTF_SetError("%s", str);
 //}
 import "C"
-import "github.com/veandco/go-sdl2/sdl"
+import "github.com/ClarkGuan/go-sdl2/sdl"
 import "unsafe"
 import "errors"
 
@@ -113,13 +113,13 @@ func OpenFontIndex(file string, size int, index int) (*Font, error) {
 
 // OpenFontRW loads src for use as a font, at specified size. This is actually OpenFontIndexRW(src, freesrc, size, 0). This can load TTF and FON formats. Using SDL_RWops is not covered here, but they enable you to load from almost any source.
 // (https://www.libsdl.org/projects/SDL_ttf/docs/SDL_ttf_15.html)
-func OpenFontRW(src *sdl.RWops, freesrc, size int) (*Font, error) {
+func OpenFontRW(src sdl.RWops, freesrc, size int) (*Font, error) {
 	return OpenFontIndexRW(src, freesrc, size, 0)
 }
 
 // OpenFontIndexRW loads src, face index, for use as a font, at the specified size. This can load TTF and FON formats. Using SDL_RWops is not covered here, but they enable you to load from almost any source.
 // (https://www.libsdl.org/projects/SDL_ttf/docs/SDL_ttf_17.html)
-func OpenFontIndexRW(src *sdl.RWops, freesrc, size, index int) (*Font, error) {
+func OpenFontIndexRW(src sdl.RWops, freesrc, size, index int) (*Font, error) {
 	_src := (*C.SDL_RWops)(unsafe.Pointer(src))
 	_freesrc := (C.int)(freesrc)
 	_size := (C.int)(size)
