@@ -15,4 +15,5 @@ void addHintCallback(const char *name)
 
 void delHintCallback(const char *name)
 {
-	SDL_DelHintCallback(name, hintCallback, NULL);}
+	SDL_DelHintCallback(name, hintCallback, NULL);
+}
